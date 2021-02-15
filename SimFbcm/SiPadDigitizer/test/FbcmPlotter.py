@@ -37,24 +37,26 @@ def main():
     allHits = fIn.Get('FbcmNtuple/SensorSize_{0}'.format( opt.SensorGroupIndex ) )
     simhitsPerRho = ROOT.TH1D("hSimHitsPerRho" , "Sim Hits per rho" , 30 , 0 , 30 )
     digiHitsPerRho = ROOT.TH1D("hDigiHitsPerRho" , "Digi Hits per rho" , 30 , 0 , 30 )
-
-    for hit in allHits:
-        simhitsPerRho.Fill( hit.SensorRho, hit.nSimParticles )
-
-        for bx in range(3):
-            if  hit.DigiHitStatus[bx]==1:
-                digiHitsPerRho.Fill(hit.SensorRho )
-    
-	simhitsPerRho.Divide( totalAreaPerRho )
-	digiHitsPerRho.Divide( totalAreaPerRho )
 	
-	fout = ROOT.TFile.Open( opt.outfile , "recreate")
-	simhitsPerRho.Write()
-	digiHitsPerRho.Write()
-	#sensorsPerRho.Write()
-	#totalAreaPerRho.Write()
-	fout.Close()
-	return 0
+    for hit in allHits:
+		simhitsPerRho.Fill( hit.SensorRho, hit.nSimParticles )
+		digiHitsPerRho.Fill( hit.SensorRho, hit.nValidDigiToAs ) 
+        #for bx in range(3):
+            #if  hit.DigiHitStatus[bx]==1:
+                #digiHitsPerRho.Fill(hit.SensorRho ) 
+    
+    simhitsPerRho.Divide( totalAreaPerRho )
+    simhitsPerRho.Scale( 1.0/7.0/100.0 )
+    digiHitsPerRho.Divide( totalAreaPerRho )
+    digiHitsPerRho.Scale( 1.0/3.0/100.0 )
+
+    fout = ROOT.TFile.Open( opt.outfile , "recreate")
+    simhitsPerRho.Write()
+    digiHitsPerRho.Write()
+    sensorsPerRho.Write()
+    totalAreaPerRho.Write()
+    fout.Close()
+    return 0
 
 if __name__ == "__main__":
     sys.exit( main() )
