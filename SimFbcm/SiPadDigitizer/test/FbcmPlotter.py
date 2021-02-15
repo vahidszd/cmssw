@@ -46,12 +46,15 @@ def main():
                 digiHitsPerRho.Fill(hit.SensorRho )
     
     simhitsPerRho.Divide( totalAreaPerRho )
+    simhitsPerRho.Scale( 1.0/7.0 )
     digiHitsPerRho.Divide( totalAreaPerRho )
-
+    digiHitsPerRho.Scale( 1.0/3.0 )
 
     fout = ROOT.TFile.Open( opt.outfile , "recreate")
     simhitsPerRho.Write()
     digiHitsPerRho.Write()
+
+    totalAreaPerRho.Write()
     fout.Close()
     return 0
 
