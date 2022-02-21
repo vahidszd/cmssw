@@ -115,6 +115,82 @@ commonDict = {
             'Geometry/CMSCommonData/data/FieldParameters.xml',
         ],
         "era" : "run3_common, stage2L1Trigger_2021",
+    },
+    "O5" : {
+        1 : [
+            'Geometry/CMSCommonData/data/materials/2021/v2/materials.xml',
+            'Geometry/TrackerCommonData/data/zeroMaterial/2021/v1/trackermaterial.xml',
+            'Geometry/CMSCommonData/data/rotations.xml',
+            'Geometry/CMSCommonData/data/extend/v3/cmsextent.xml',
+            'Geometry/CMSCommonData/data/cavernData/2021/v1/cavernData.xml',
+            'Geometry/CMSCommonData/data/cms/2021/v3/cms.xml',
+            'Geometry/CMSCommonData/data/cmsMother.xml',
+            'Geometry/CMSCommonData/data/eta3/etaMax.xml',
+            'Geometry/CMSCommonData/data/cmsTracker.xml',
+            'Geometry/CMSCommonData/data/caloBase/2017/v1/caloBase.xml',
+            'Geometry/CMSCommonData/data/cmsCalo.xml',
+            'Geometry/CMSCommonData/data/muonBase/2018/v1/muonBase.xml',
+            'Geometry/CMSCommonData/data/cmsMuon.xml',
+            'Geometry/CMSCommonData/data/mgnt.xml',
+            'Geometry/CMSCommonData/data/beampipe/2021/v1/beampipe.xml',
+            'Geometry/CMSCommonData/data/cmsBeam/2021/v1/cmsBeam.xml',
+            'Geometry/CMSCommonData/data/muonMB.xml',
+            'Geometry/CMSCommonData/data/muonMagnet.xml',
+            'Geometry/CMSCommonData/data/cavern/2021/v1/cavern.xml',
+            'Geometry/CMSCommonData/data/cavernFloor/2017/v1/cavernFloor.xml',
+            'Geometry/FbcmCommonData/data/PhaseI-Run3/bcm1fVolume/cmsFbcm.xml',
+			'Geometry/FbcmCommonData/data/PhaseI-Run3/MultiSize_MultiRho/v1/fbcm.xml',
+			'Geometry/FbcmCommonData/data/PhaseI-Run3/MultiSize_MultiRho/v1/FbcmSpecs.xml',
+			'Geometry/FbcmSimData/data/PhaseI/FbcmSens.xml',
+        ],
+        5 : [
+            'Geometry/CMSCommonData/data/FieldParameters.xml',
+        ],
+        "sim" : [
+            'from Geometry.FbcmGeometryBuilder.FbcmGeometry_cfi import *',
+        ],
+        "reco" : [
+            'from Geometry.FbcmGeometryBuilder.FbcmGeometry_cfi import *',
+        ],
+        "era" : "run3_common, stage2L1Trigger_2021",
+    },
+    "O6" : {
+        1 : [
+            'Geometry/CMSCommonData/data/materials/2021/v2/materials.xml',
+            'Geometry/TrackerCommonData/data/zeroMaterial/2021/v1/trackermaterial.xml',
+            'Geometry/CMSCommonData/data/rotations.xml',
+            'Geometry/CMSCommonData/data/extend/v3/cmsextent.xml',
+            'Geometry/CMSCommonData/data/cavernData/2021/v1/cavernData.xml',
+            'Geometry/CMSCommonData/data/cms/2021/v3/cms.xml',
+            'Geometry/CMSCommonData/data/cmsMother.xml',
+            'Geometry/CMSCommonData/data/eta3/etaMax.xml',
+            'Geometry/CMSCommonData/data/cmsTracker.xml',
+            'Geometry/CMSCommonData/data/caloBase/2017/v1/caloBase.xml',
+            'Geometry/CMSCommonData/data/cmsCalo.xml',
+            'Geometry/CMSCommonData/data/muonBase/2018/v1/muonBase.xml',
+            'Geometry/CMSCommonData/data/cmsMuon.xml',
+            'Geometry/CMSCommonData/data/mgnt.xml',
+            'Geometry/CMSCommonData/data/beampipe/2021/v1/beampipe.xml',
+            'Geometry/CMSCommonData/data/cmsBeam/2021/v1/cmsBeam.xml',
+            'Geometry/CMSCommonData/data/muonMB.xml',
+            'Geometry/CMSCommonData/data/muonMagnet.xml',
+            'Geometry/CMSCommonData/data/cavern/2021/v1/cavern.xml',
+            'Geometry/CMSCommonData/data/cavernFloor/2017/v1/cavernFloor.xml',
+            'Geometry/FbcmCommonData/data/PhaseI-Run3/bcm1fVolume/cmsFbcm.xml',
+			'Geometry/FbcmCommonData/data/PhaseI-Run3/bcm1f-Run3/v1/fbcm.xml',
+			'Geometry/FbcmCommonData/data/PhaseI-Run3/bcm1f-Run3/v1/FbcmSpecs.xml',
+			'Geometry/FbcmSimData/data/PhaseI/FbcmSens.xml',
+        ],
+        5 : [
+            'Geometry/CMSCommonData/data/FieldParameters.xml',
+        ],
+        "sim" : [
+            'from Geometry.FbcmGeometryBuilder.FbcmGeometry_cfi import *',
+        ],
+        "reco" : [
+            'from Geometry.FbcmGeometryBuilder.FbcmGeometry_cfi import *',
+        ],
+        "era" : "run3_common, stage2L1Trigger_2021",
     }
 }
 
@@ -1309,6 +1385,8 @@ allDicts = [ commonDict, trackerDict, caloDict, muonDict, forwardDict, ppsDict ]
 detectorVersionDict = {
     ("O3","T3","C1","M1","F1","P2") : "2021",
     ("O4","T4","C1","M1","F1","P2") : "2021ZeroMaterial",
+    ("O5","T3","C1","M1","F1","P2") : "2021Bcm1fMSMR",
+    ("O6","T3","C1","M1","F1","P2") : "2021Bcm1fRun3",
  }
 
 deprecatedSubdets = set([ "T1", "T2", "O1", "O2", "P1" ])
