@@ -22,8 +22,8 @@ def getInputFileList(baseDirectory, beginsWithTheseChars ): # without "/" at the
 
 baseDirectory ='/eos/cms/store/group/dpg_bril/comm_bril/phase2-sim/FBCM/Aug2022Workshop/MinBias/FBCMV2MinBias/220820_202455'
 minBiasFiles = getInputFileList(baseDirectory, "MinBias" )
-# minBiasFiles = [minBiasFiles[0]]
-# print(minBiasFiles)
+#minBiasFiles = [minBiasFiles[0]]
+#print(minBiasFiles)
 # exit(0)
 
 
@@ -109,18 +109,18 @@ process.configurationMetadata = cms.untracked.PSet(
 
 # # Output definition
 
-# process.FEVTDEBUGoutput = cms.OutputModule("PoolOutputModule",
-    # SelectEvents = cms.untracked.PSet(
-        # SelectEvents = cms.vstring('generation_step')
-    # ),
-    # dataset = cms.untracked.PSet(
-        # dataTier = cms.untracked.string('GEN-SIM-DIGI-RAW'),
-        # filterName = cms.untracked.string('')
-    # ),
-    # fileName = cms.untracked.string('file:GEN_SIM_DIGI.root'),
-    # outputCommands = process.FEVTDEBUGEventContent.outputCommands,
-    # splitLevel = cms.untracked.int32(0)
-# )
+process.FEVTDEBUGoutput = cms.OutputModule("PoolOutputModule",
+    SelectEvents = cms.untracked.PSet(
+        SelectEvents = cms.vstring('generation_step')
+    ),
+    dataset = cms.untracked.PSet(
+        dataTier = cms.untracked.string('GEN-SIM-DIGI-RAW'),
+        filterName = cms.untracked.string('')
+    ),
+    fileName = cms.untracked.string('file:GEN_SIM_DIGI_M2.root'),
+    outputCommands = process.FEVTDEBUGEventContent.outputCommands,
+    splitLevel = cms.untracked.int32(0)
+)
 
 # Additional output definition
 
@@ -167,7 +167,8 @@ process.FbcmNtuple = cms.EDAnalyzer('FbcmNtuplizer_v4',
                                                     'NoTimewalkComp',
                                                     'Vtsh30mV', 
                                                     'Vtsh60mV',
-                                                    'Vtsh90mV') # provide a list of valid instanse
+                                                    'Vtsh90mV',
+                                                    'Vtsh1000mV') # provide a list of valid instanse
                                     )
  
 outFName = 'outFbcm2022_pu{0}.root'.format( options.pu )
@@ -187,11 +188,11 @@ process.simulation_step = cms.Path(process.psim)
 process.digitisation_step = cms.Path(process.pdigi)
 process.genfiltersummary_step = cms.EndPath(process.genFilterSummary)
 process.endjob_step = cms.EndPath(process.endOfProcess)
-# process.FEVTDEBUGoutput_step = cms.EndPath(process.FEVTDEBUGoutput)
+process.FEVTDEBUGoutput_step = cms.EndPath(process.FEVTDEBUGoutput)
 
 # Schedule definition
 # process.schedule = cms.Schedule(process.generation_step,process.genfiltersummary_step,process.simulation_step,process.digitisation_step,process.endjob_step,process.FEVTDEBUGoutput_step)
-process.schedule = cms.Schedule(process.generation_step,process.genfiltersummary_step,process.simulation_step,process.digitisation_step,process.endjob_step,process.nTuple_step)
+process.schedule = cms.Schedule(process.generation_step,process.genfiltersummary_step,process.simulation_step,process.digitisation_step,process.endjob_step,process.FEVTDEBUGoutput_step)
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 associatePatAlgosToolsTask(process)
 
@@ -226,12 +227,14 @@ SiPad2p=SiPad1p.clone()
 SiPad3p=SiPad1p.clone()
 SiPad4p=SiPad1p.clone()
 SiPad5p=SiPad1p.clone()
+SiPad6p=SiPad1p.clone()
 
 SiPad1p.InstanceName = cms.string('WithTimewalkComp')
 SiPad2p.InstanceName = cms.string('NoTimewalkComp')
 SiPad3p.InstanceName = cms.string('Vtsh30mV')
 SiPad4p.InstanceName = cms.string('Vtsh60mV')
 SiPad5p.InstanceName = cms.string('Vtsh90mV')
+SiPad6p.InstanceName = cms.string('Vtsh1000mV')
 
 
 SiPad1p.SiPadFrontEndParam[0].ApplyTimewalk =cms.bool(True)
@@ -239,19 +242,22 @@ SiPad2p.SiPadFrontEndParam[0].ApplyTimewalk =cms.bool(False)
 SiPad3p.SiPadFrontEndParam[0].FE2022ASIC.ComparatorThreshold = cms.double(29.12)
 SiPad4p.SiPadFrontEndParam[0].FE2022ASIC.ComparatorThreshold = cms.double(58.27)
 SiPad5p.SiPadFrontEndParam[0].FE2022ASIC.ComparatorThreshold = cms.double(87.4)
+SiPad6p.SiPadFrontEndParam[0].FE2022ASIC.ComparatorThreshold = cms.double(1000)
 
 SiPad1p.SiPadFrontEndParam[0].signalCodeForPeakAmpl = cms.int32(0) # si
 SiPad2p.SiPadFrontEndParam[0].signalCodeForPeakAmpl = cms.int32(1) # preAmp
 SiPad3p.SiPadFrontEndParam[0].signalCodeForPeakAmpl = cms.int32(2) # booster
 SiPad4p.SiPadFrontEndParam[0].signalCodeForPeakAmpl = cms.int32(3) # after limitter
 SiPad5p.SiPadFrontEndParam[0].signalCodeForPeakAmpl = cms.int32(4) # shaper (end of the chain)
+SiPad6p.SiPadFrontEndParam[0].signalCodeForPeakAmpl = cms.int32(4) # shaper (end of the chain)
 
 process.theDigitizers = cms.PSet(
     SiPad1=SiPad1p,
     SiPad2=SiPad2p,
     SiPad3=SiPad3p,
     SiPad4=SiPad4p,
-    SiPad5=SiPad5p,
+    SiPad5=SiPad5p, 
+    SiPad6=SiPad6p,
 )
 process.theDigitizersValid = cms.PSet(
     SiPad1=SiPad1p,
@@ -259,6 +265,7 @@ process.theDigitizersValid = cms.PSet(
     SiPad3=SiPad3p,
     SiPad4=SiPad4p,
     SiPad5=SiPad5p,
+    SiPad6=SiPad6p,
 )
 
 process.mix.digitizers = cms.PSet(
@@ -267,6 +274,7 @@ process.mix.digitizers = cms.PSet(
     SiPad3=SiPad3p,
     SiPad4=SiPad4p,
     SiPad5=SiPad5p,
+    SiPad6=SiPad6p,
 )
 
 #call to customisation function no_aging imported from SimFbcm.SiPadDigitizer.aging
