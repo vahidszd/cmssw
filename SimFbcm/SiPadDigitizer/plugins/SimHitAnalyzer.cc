@@ -90,7 +90,7 @@ std::vector<TFileDirectory> tagDirectoriesDigi;
   std::vector< TH1* > hist_NHits;
   std::vector< TH1* > hNEvents;
   std::vector< TH2* > RhoArea;
-  std::vector< TH2* > PeakAmple;
+  std::vector< TH1* > PeakAmple;
   TH2*  RhoAreaGeom;
   std::vector< TH2* >  RhoAreaNormalizedNew;
 std::vector< TH2* >  DigiHitsPerArea;
@@ -157,22 +157,24 @@ numberOfSensorGroups(0)
 {
     
    edm::InputTag tag(hitsProducer_,SubdetName_); 
-
+  //token = consumes< std::vector<PSimHit> >(tag);
   numberOfSensorGroups=0;
   
-
+  //consumes<edm::PSimHitContainer>(tag);
   token = consumes<edm::PSimHitContainer>(tag);
+  // edm::Service<TFileService> fs;
 
+  //  Directory.clear();
 
-
+    //    hist_NHits = fs->make<TH1D>("nPSimHits","nPSimHits",100,0,100); 
   edm::Service<TFileService> fs;
-
+  //TFileDirectory subDir;  
   tagDirectories.clear();
  hist_NHits.clear();
     theTree.clear();
   FixedValuesTree.clear();
   hNEvents.clear();
-
+  //hNSensorGroups.clear();
  int m;
   for(auto it = std::begin(instanceNames); it != std::end(instanceNames); ++it) {
 
@@ -182,7 +184,19 @@ numberOfSensorGroups(0)
     //cout<<"The tag is "<< tag;
     TokenTagsDigi_.emplace_back( consumes< edm::DetSetVector<SiPadDigiData> >( tag )  );
   }
+//     tagDirectoriesDigi.emplace_back( fs->mkdir( it->c_str() ) ); 
+// FixedValuesTree.emplace_back( tagDirectoriesDigi.back().make<TTree>( "GeometryInfo" , "FixedValues" )   );
+//     hNEvents.emplace_back( tagDirectoriesDigi.back().make<TH1I>("hNEvents" , "" , 1 , 0 , 1 )  );
+//     RhoAreaGeom.emplace_back( tagDirectoriesDigi.back().make<TH2F>("testGeom" , "" , 70 , 7.5 , 22,100,0,0.3 )  );
 
+//   }
+
+  //for (auto it = std::begin(Directory); it != std::end(Directory); it++)
+  // {
+       //tagDirectories.emplace_back( fs->mkdir( it->c_str() ) );
+  //   cout<< "treename is : " << it->c_str() << endl;
+  //   hist_NHits.emplace_back(tagDirectories.back().make<TH1I>("noPsimhits","",200,0,200));
+  // }
 
   }
 SimHitAnalyzer::~SimHitAnalyzer()
@@ -201,27 +215,55 @@ edm::Service<TFileService> fs;
    using namespace std;
    int nBinsX();
 
+   //  edm::Handle<std::vector<PSimHit> > hsimHits;
+   
+
+
+
+
+   //edm::Handle<edm::PSimHitContainer> hsimHits;
+
           edm::InputTag tag(hitsProducer_, SubdetName_);
        cout << "tag in SimHitAnalyzer is :" << tag << endl;
-       cout<<"we are in analyze ------------------------------$$$$%%%%%%%%%%%%%"<<endl;
-  
+     
+   
+   cout<<"we are in analyze ------------------------------$$$$%%%%%%%%%%%%%"<<endl;
+   //int n;
     for (auto it = std::begin(instanceNames); it != std::end(instanceNames); it++)
       {
  edm::InputTag tag("simFbcmDigis", it->c_str() );
     cout<<"The tag is "<< tag;
-  
+    // TokenTags_.emplace_back( consumes< edm::DetSetVector<SiPadDigiData> >( tag )  ); 
         tagDirectories.emplace_back( fs->mkdir( it->c_str() ) );
         cout<< "treename is : " << it->c_str() << endl;
-  
+        //cin >> n;
       }
-  
-    // iEvent.getByToken(token, hsimHits);
-  
+   //iEvent.getByLabel(tag, hsimHits);
+   iEvent.getByToken(token, hsimHits);
+   // for (const auto& simHit : *hsimHits) {
+   //   std::cout << "Track ID: " << simHit.trackId() << std::endl;
+   //   std::cout << "Energy Deposit: " << simHit.energyLoss() << std::endl;
+   //   std::cout << "Time of Flight: " << simHit.timeOfFlight() << std::endl;
+   //   std::cout << "Local Position: " << simHit.localPosition() << std::endl;
+   // }
+   //const std::vector<PSimHit> & simHits = *hsimHits.product();
+
+   //  for (std::vector<PSimHit>::const_iterator simHit = simHits.begin(); simHit != simHits.end(); ++simHit) {
+      // Extract data from individual PSimHit objects
+   // cout<<"we are in second loop"<<endl;
+      // cout << "we are in PSimHits loop " << endl;
+      // int particleType = simHit->particleType();
+      // //GlobalPoint hitPosition = simHit->entryPoint();
+      // double energyDeposit = simHit->energyLoss();
+      // cout << "energyDeposit is: " << energyDeposit << endl;
+      // // Store the extracted data
+ 
+      //   }
    for(long unsigned int i = 0; i < tagDirectoriesDigi.size(); i++){
   if(hsimHits.isValid()){
     //cout << "SimHIt is Valid." << endl;
     // cout << "hsimhits->size is : " << hsimHits->size() << endl;
-    
+    //RhoArea[i]->Fill(5,6);
      hNEvents[i]->Fill(hsimHits->size());
 
   edm::Handle< edm::DetSetVector<SiPadDigiData> > handle; 
@@ -236,7 +278,9 @@ edm::Service<TFileService> fs;
        cout << "size == " << itDetSet->size() << endl; 
 
     for (std::vector<SiPadDigiData>::const_iterator Digidata_it = itDetSet->begin() ; Digidata_it < itDetSet->end() ; ++Digidata_it) {
-    
+      //const SiPadDigiData Digidata= *(Digidata_it);
+      //SiDieId=Digidata_it->SiliconDieIndex() ;
+      //SensorGroupIndex = SiDieId % nbrOfDiesPerRing;
       cout << "we are in second loop" << endl;
       SensorGroupIndex = Digidata_it->SiGroupIndex();
       
@@ -255,7 +299,10 @@ edm::Service<TFileService> fs;
             
        cout << "SensorArea = " << SensorArea << endl;
        nSimParticles = 0 ;
-    
+      // if ( SensorArea > 0.0290){
+      // 	int tm ;
+      //   cin >> tm ;
+      // }
       for(auto sim : Digidata_it->CahrgePsimVector()) {
       	SimPdgIds[nSimParticles] = sim.second.ParticleType() ;
       	SimPts[nSimParticles] = sim.second.Pabs() ;
@@ -280,7 +327,7 @@ edm::Service<TFileService> fs;
             BxSlotCnt++; 
                     
              for (auto ToaTot : hit.TotToaVectort()) {
-                PeakAmple[i]->Fill(SensorRho,ToaTot.PeakAmplitude());
+                PeakAmple[i]->Fill(ToaTot.PeakAmplitude());
                if ( (ToaTot.ToAToAStatusInt() == ToAStatus::FullyWithinBx || ToaTot.ToAToAStatusInt() == ToAStatus::WithinBx_LastsAfter ) ) 
                {
                    {
@@ -307,7 +354,7 @@ edm::Service<TFileService> fs;
     }
     cout << "bxslotcont = " << BxSlotCnt << endl;
    
-   
+   RhoArea[i]->Draw("colz");
 
  } 
      std::set<unsigned int> detIds;
@@ -319,7 +366,58 @@ edm::Service<TFileService> fs;
 
 void SimHitAnalyzer::beginJob()
 {
+//  int nBinsX;
+//   int nBinsY;
+//   int N;
+//   float Rho;
+//   int SiDieId=0;
+//   int SiDieGroupIndex=0;
+//   float padX, padY , padRho;
+//   float minRho = 100, maxRho = 0, minArea = 10, maxArea= 0;
+//   float area;
+//   vector <Double_t> binedges;
+//   //iSetup.get<FbcmGeometryRecord>().get(theFbcmGeom); 
+//   const std::vector<const FbcmStationGeom*> AllStatitons = theFbcmGeom->Stations();
+//   const std::vector<FbcmSiPadGeom const*> allSiPadGeoms = theFbcmGeom->SiPads();
+//   nbrOfDiesPerRing = AllStatitons[0]->NumOfDiesPerRing(); 
+//   cout<< "we are in beginjob simhitanalyzer ===============" << endl;
+//   edm::Service<TFileService> fs;
+ 
 
+
+//  for(const auto& siPad : allSiPadGeoms)
+//     {
+//       std::pair<float, float> SiPadDimension = siPad->SiPadTopology().pitch();
+
+//       padX = SiPadDimension.first;
+//       padY = SiPadDimension.second;
+//       area = padX*padY;
+//       bool exists = find(binedges.begin(), binedges.end(), area) != binedges.end();
+//       if ( !exists ){
+// 	cout << " area = " << area << endl;
+// 	binedges.push_back(area);
+// 	cout << "biedges content  = " << binedges[binedges.size()-1] << endl;
+//         cout<< "binages size = "  << binedges.size() << endl ;
+// 	//	cin >> n;
+//       }
+ 
+//       // cout<< "we are in beginjob simhitanalyzer ===============" << endl;
+//       // edm::Service<TFileService> fs;
+//  for(auto it = std::begin(instanceNames); it != std::end(instanceNames); ++it) {
+
+//     std::cout<<"stop for instannce name "<<it->c_str();
+//     //std::cin>> m;
+//     edm::InputTag tag("simFbcmDigis", it->c_str() );
+//     //cout<<"The tag is "<< tag;
+//     //   TokenTagsDigi_.emplace_back( consumes< edm::DetSetVector<SiPadDigiData> >( tag )  );
+//     tagDirectoriesDigi.emplace_back( fs->mkdir( it->c_str() ) ); 
+// FixedValuesTree.emplace_back( tagDirectoriesDigi.back().make<TTree>( "GeometryInfo" , "FixedValues" )   );
+//     hNEvents.emplace_back( tagDirectoriesDigi.back().make<TH1I>("hNEvents" , "" , 1 , 0 , 1 )  );
+//     RhoAreaGeom.emplace_back( tagDirectoriesDigi.back().make<TH2F>("testGeom" , "" , 70 , 7.5 , 22,100,0,0.3 )  );
+// RhoAreaNormalizedNew.emplace_back( tagDirectoriesDigi.back().make<TH2F>("testGeomNew" , "" , 70 , 7.5 , 22,100,0,0.3 )  );
+//  RhoArea.emplace_back( tagDirectoriesDigi.back().make<TH2F>("test" , "" , 70 , 7.5 , 22,100,0,0.3 )  );
+//   }
+//     }
  }
  void SimHitAnalyzer::endJob()
  {
@@ -345,7 +443,7 @@ void SimHitAnalyzer::beginRun(edm::Run const&, edm::EventSetup const& iSetup)
 
  edm::Service<TFileService> fs;
 
-
+  // RhoAreaGeom.emplace_back( tagDirectoriesDigi.back().make<TH2F>("testGeom" , "" , 70 , 7.5 , 22,100,0,0.3 )  );
  cout << "we are in beginRun SimHItanalyzer&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& " << endl <<"tagDirectoriesDigi = "  << tagDirectoriesDigi.size() << endl;
 
  iSetup.get<FbcmGeometryRecord>().get(theFbcmGeom); 
@@ -429,7 +527,7 @@ string title1 = "Total Number of DigiHits_" + string(it->c_str()) ;
     RhoArea.emplace_back( tagDirectoriesDigi.back().make<TH2F>(label1.c_str() ,title1.c_str() ,Int_t(binwidthRho)  , minRho ,maxRho,binNo,BinEdgesNew )  );
     DigiHitsPerSensor.emplace_back( tagDirectoriesDigi.back().make<TH2F>(label.c_str() , label.c_str() ,Int_t(binwidthRho)  , minRho ,maxRho,binNo,BinEdgesNew )  );
  DigiHitsPerArea.emplace_back( tagDirectoriesDigi.back().make<TH2F>(" DigiHitsPerArea" , " Number of DigiHits Per mm^{2}" ,Int_t(binwidthRho)  , minRho ,maxRho,binNo,BinEdgesNew )  );
- PeakAmple.emplace_back( tagDirectoriesDigi.back().make<TH2F>(" PeakAmple" , " PeakAmple" ,Int_t(binwidthRho)  , minRho ,maxRho,binNo,BinEdgesNew )  );
+ PeakAmple.emplace_back( tagDirectoriesDigi.back().make<TH1F>(" PeakAmple" , " PeakAmple",100,0,1000 )  );
  
 }
 
@@ -498,7 +596,21 @@ nBinsX = RhoAreaGeom->GetNbinsX();
 
 }
 
+  //  edm::InputTag tag(hitsProducer_);
+  //consumes<edm::PSimHitContainer>(tag);
 
+  //   std::cout << "vahid" <<endl;
+//   edm::Handle<std::vector<PSimHit> > hSimHit;
+//    if(hSimHit.isValid()){
+//   std::vector<PSimHit> const& simHits = *hSimHit.product();
+//   std::set<unsigned int> detIds;
+//   int i = 0;
+//    for (auto it = simHits.begin(); it!= simHits.end(); ++it)
+//    	 {
+// 	   std::cout << "i is " << ++i;
+//            std::cout << "vahid"<<endl; 
+// 	   	 }
+// } 
 
 void SimHitAnalyzer::endRun(edm::Run const&, edm::EventSetup const&)
 {
