@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
-
+import os
 
 
 options = VarParsing.VarParsing ('analysis')
@@ -43,18 +43,85 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 
+
+
+
+##################################################################
+#     Getting proper Directory for PU                            #
+##################################################################
+def get_files_in_directory(directory):
+    file_list = []
+    for root, dirs, files in os.walk(directory):
+        for filename in files:
+            file_list.append(os.path.join(root, filename))
+    return file_list
+
+# Provide the directory path you want to read files from
+
+#directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU0p5'
+
+# Call the function to get the list of files in the directory and subdirectories
+
+
+print(options.pu)
+if options.pu == '0p5':
+    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU0p5'
+elif options.pu == '1':
+    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU1'
+elif options.pu == '1p5':
+    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU1p5'
+elif options.pu == 1.5:
+    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU1p5'
+elif options.pu == '2':
+    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU2'
+elif options.pu == '10':
+    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU10'
+elif options.pu == '30':
+    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU30'
+elif options.pu == '50':
+    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU50'
+elif options.pu == '100':
+    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU100'
+elif options.pu == '140':
+    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU140'
+elif options.pu == '200':
+    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU200'
+else:
+    print("Invalid options.pu value!")
+
+print (directory_path)
+files =  get_files_in_directory(directory_path)
+# for f in files:
+#     print(f) 
+
+file_paths = []
+for root, directories, files in os.walk(directory_path):
+    for filename in files:
+        file_path = os.path.join(root, filename)
+        file_paths.append('file:' + file_path)
+
+print(file_paths)
+#print(file)
+# file =  ",".join(["'file:{}'".format(path) for path in files])
+# print (file)    
+
+
+
+
+print ("type of root_files_200 is : ",type(root_files_200))
+print ("type of file_paths is : " , type (file_paths))
+
 process.source = cms.Source("PoolSource",
-                                # replace 'myfile.root' with the source file you want to use
-                                fileNames = cms.untracked.vstring(
+                            fileNames = cms.untracked.vstring(file_paths
  #           'file:/eos/cms/store/group/dpg_bril/comm_bril/phase2-sim/FBCM/NuGun/FBCMNuGunPU100/210130_220345/0000/GEN_SIM_DIGI_99.root'#(TDR files)
 #'file:/eos/home-v/vsedighz/lasttest/NuGun/FbcmMultiInstanceNuGunPU50/230529_051020/0000/GEN_SIM_DIGI_1.root','file:/eos/home-v/vsedighz/lasttest/NuGun/FbcmMultiInstanceNuGunPU50/230529_051020/0000/GEN_SIM_DIGI_2.root','file:/eos/home-v/vsedighz/lasttest/NuGun/FbcmMultiInstanceNuGunPU50/230529_051020/0000/GEN_SIM_DIGI_3.root','file:/eos/home-v/vsedighz/lasttest/NuGun/FbcmMultiInstanceNuGunPU50/230529_051020/0000/GEN_SIM_DIGI_4.root','file:/eos/home-v/vsedighz/lasttest/NuGun/FbcmMultiInstanceNuGunPU50/230529_051020/0000/GEN_SIM_DIGI_5.root'
 #'file:/eos/cms/store/group/dpg_bril/comm_bril/phase2-sim/FBCM/Aug2022Workshop/GEN_SIM_DIGI_Validation/NuGun/FbcmMultiInstanceNuGunPU200/230611_161305/0000/GEN_SIM_DIGI_99.root'
-'file:GEN_SIM_DIGI_M2.root'
+#'file:GEN_SIM_DIGI_1.5.root'
                 )
                             )
-
+output_folder = '/eos/home-v/vsedighz/vahidtest/hists'
 process.TFileService = cms.Service("TFileService",
-                                       fileName = cms.string('histodemonew.root')
+                                       fileName = cms.string(os.path.join(output_folder,'histodemonew_pu{0}.root'.format(options.pu)))
                                    )
 
 process.demo = cms.EDAnalyzer('SimHitAnalyzer',
@@ -62,8 +129,8 @@ process.demo = cms.EDAnalyzer('SimHitAnalyzer',
 'Vtsh30mV', 
 'Vtsh60mV',
 'Vtsh90mV',
-#'Vtsh120mV',
-'Vtsh1000mV'
+'Vtsh120mV',
+#'Vtsh1000mV'
                                 ), # provide a list of valid instanse 
 TreeName = cms.vstring( 'PU{0}'.format(options.pu)),
 hitsProducer = cms.string('g4SimHits'),
