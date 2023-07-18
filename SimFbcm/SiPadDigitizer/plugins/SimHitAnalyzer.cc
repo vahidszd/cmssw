@@ -91,6 +91,8 @@ std::vector<TFileDirectory> tagDirectoriesDigi;
   std::vector< TH1* > hNEvents;
   std::vector< TH2* > RhoArea;
   std::vector< TH1* > PeakAmple;
+  std::vector< TH1* > ToT;
+std::vector< TH1* > ToA;
   TH2*  RhoAreaGeom;
   std::vector< TH2* >  RhoAreaNormalizedNew;
 std::vector< TH2* >  DigiHitsPerArea;
@@ -238,35 +240,9 @@ edm::Service<TFileService> fs;
         cout<< "treename is : " << it->c_str() << endl;
         //cin >> n;
       }
-   //iEvent.getByLabel(tag, hsimHits);
-   iEvent.getByToken(token, hsimHits);
-   // for (const auto& simHit : *hsimHits) {
-   //   std::cout << "Track ID: " << simHit.trackId() << std::endl;
-   //   std::cout << "Energy Deposit: " << simHit.energyLoss() << std::endl;
-   //   std::cout << "Time of Flight: " << simHit.timeOfFlight() << std::endl;
-   //   std::cout << "Local Position: " << simHit.localPosition() << std::endl;
-   // }
-   //const std::vector<PSimHit> & simHits = *hsimHits.product();
-
-   //  for (std::vector<PSimHit>::const_iterator simHit = simHits.begin(); simHit != simHits.end(); ++simHit) {
-      // Extract data from individual PSimHit objects
-   // cout<<"we are in second loop"<<endl;
-      // cout << "we are in PSimHits loop " << endl;
-      // int particleType = simHit->particleType();
-      // //GlobalPoint hitPosition = simHit->entryPoint();
-      // double energyDeposit = simHit->energyLoss();
-      // cout << "energyDeposit is: " << energyDeposit << endl;
-      // // Store the extracted data
- 
-      //   }
+  
    for(long unsigned int i = 0; i < tagDirectoriesDigi.size(); i++){
-  if(hsimHits.isValid()){
-    //cout << "SimHIt is Valid." << endl;
-    // cout << "hsimhits->size is : " << hsimHits->size() << endl;
-    //RhoArea[i]->Fill(5,6);
-     hNEvents[i]->Fill(hsimHits->size());
-
-  edm::Handle< edm::DetSetVector<SiPadDigiData> > handle; 
+    edm::Handle< edm::DetSetVector<SiPadDigiData> > handle; 
   iEvent.getByToken(TokenTagsDigi_[i] ,handle);
   
   
@@ -294,7 +270,7 @@ edm::Service<TFileService> fs;
        cout << "SensorRho = " << SensorRho << endl;
        SensorArea=Digidata_it->Area() ;
         
-             RhoArea[i]->Fill(SensorRho,SensorArea);
+             
 	    
             
        cout << "SensorArea = " << SensorArea << endl;
@@ -333,12 +309,14 @@ edm::Service<TFileService> fs;
                    {
 		     //DigiToAs[nValidDigiToAs] = ToaTot.ToA();
                       PeakAmpl[nValidDigiToAs] = ToaTot.PeakAmplitude();
-		      
+		      RhoArea[i]->Fill(SensorRho,SensorArea);
                       nValidDigiToAs++;
                   }
-                if (ToaTot.IsToTValid())
+		   if (ToaTot.IsToTValid()){
                   DigiToTs[nValidDigiToTs++] = ToaTot.ToT();
-              
+		  ToT[i]->Fill(ToaTot.ToT());
+                  ToA[i]->Fill(ToaTot.ToA());
+		   }
                 //DigiRHUs[nTotalRhuDigi++] = ToaTot.SubBxBinNumber();
                 //if (std::find(rhuInterestedHitBins_.begin(), rhuInterestedHitBins_.end(),ToaTot.SubBxBinNumber())!=rhuInterestedHitBins_.end())
 		//  nInterstedRhuBins++;
@@ -361,7 +339,7 @@ edm::Service<TFileService> fs;
 
     }  
    }
-}
+
 
 
 void SimHitAnalyzer::beginJob()
@@ -443,7 +421,7 @@ void SimHitAnalyzer::beginRun(edm::Run const&, edm::EventSetup const& iSetup)
 
  edm::Service<TFileService> fs;
 
-  // RhoAreaGeom.emplace_back( tagDirectoriesDigi.back().make<TH2F>("testGeom" , "" , 70 , 7.5 , 22,100,0,0.3 )  );
+ 
  cout << "we are in beginRun SimHItanalyzer&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& " << endl <<"tagDirectoriesDigi = "  << tagDirectoriesDigi.size() << endl;
 
  iSetup.get<FbcmGeometryRecord>().get(theFbcmGeom); 
@@ -477,8 +455,7 @@ bool exists = find(binedges.begin(), binedges.end(), area) != binedges.end();
       cout << "padx is " << padX << endl;	  
       cout << "padY is " << padY << endl;	  
       cout << "padRho is " << padRho << endl;
-      //RhoAreaGeom[i]->Fill(padRho,padX*padY);	  
-        //std::cout << SiDieId <<", " << SiDieGroupIndex <<"\n"; 
+     
       minRho = min(minRho, padRho);
       maxRho = max(maxRho,padRho);
       minArea = min(minArea, padX*padY);
@@ -510,7 +487,11 @@ NofEvents = fs->make<TH1I>("No of Events ","NofEvents",1,0,1);
  for(auto it = std::begin(instanceNames); it != std::end(instanceNames); ++it) {
 
    string label = "DigiHitPerSensor_" + string(it->c_str()) ;
-   string label1 ="nOfDigiHits" + string(it->c_str());
+   string label1 ="nOfDigiHits_" + string(it->c_str());
+   string label_ToT = "ToT_" + string(it->c_str());
+string title_ToT = "ToT_" + string(it->c_str());
+string label_ToA = "ToA_" + string(it->c_str());
+string title_ToA = "ToA_" + string(it->c_str());
 string title = " Number of DigiHits Per Sensor Per Event_" + string(it->c_str()) ;
 string title1 = "Total Number of DigiHits_" + string(it->c_str()) ;
     std::cout<<"stop for instannce name "<<it->c_str();
@@ -525,9 +506,11 @@ string title1 = "Total Number of DigiHits_" + string(it->c_str()) ;
    
     RhoAreaNormalizedNew.emplace_back( tagDirectoriesDigi.back().make<TH2F>("RhoAreaNormalizedNew" , "RhoAreaNormalizedNew" , Int_t(binwidthRho)  , minRho ,maxRho,binNo,BinEdgesNew  )  );
     RhoArea.emplace_back( tagDirectoriesDigi.back().make<TH2F>(label1.c_str() ,title1.c_str() ,Int_t(binwidthRho)  , minRho ,maxRho,binNo,BinEdgesNew )  );
-    DigiHitsPerSensor.emplace_back( tagDirectoriesDigi.back().make<TH2F>(label.c_str() , label.c_str() ,Int_t(binwidthRho)  , minRho ,maxRho,binNo,BinEdgesNew )  );
+    DigiHitsPerSensor.emplace_back( tagDirectoriesDigi.back().make<TH2F>(label.c_str() , title.c_str() ,Int_t(binwidthRho)  , minRho ,maxRho,binNo,BinEdgesNew )  );
  DigiHitsPerArea.emplace_back( tagDirectoriesDigi.back().make<TH2F>(" DigiHitsPerArea" , " Number of DigiHits Per mm^{2}" ,Int_t(binwidthRho)  , minRho ,maxRho,binNo,BinEdgesNew )  );
  PeakAmple.emplace_back( tagDirectoriesDigi.back().make<TH1F>(" PeakAmple" , " PeakAmple",100,0,1000 )  );
+ ToT.emplace_back( tagDirectoriesDigi.back().make<TH1F>(label_ToT.c_str() , title_ToT.c_str() ,100,0,50 )  );
+ ToA.emplace_back( tagDirectoriesDigi.back().make<TH1F>(label_ToA.c_str() , title_ToA.c_str() ,100,0,50 )  );
  
 }
 

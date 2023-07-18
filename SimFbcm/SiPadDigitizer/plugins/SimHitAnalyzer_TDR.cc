@@ -224,7 +224,7 @@ SimHitAnalyzer_TDR::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
       SensorRho=Digidata_it->Radius() ;
       SensorArea=Digidata_it->Area() ;
       //cout << "Sensor Area in TDR = " << SensorArea << endl;
-      RhoArea->Fill(SensorRho, SensorArea);
+      #RhoArea->Fill(SensorRho, SensorArea);
       nSimParticles = 0 ; 
       for(auto sim : Digidata_it->CahrgePsimVector()) {
 	SimPdgIds[nSimParticles] = sim.second.ParticleType() ;
@@ -255,6 +255,7 @@ SimHitAnalyzer_TDR::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
                       DigiToAs[nValidDigiToAs] = ToaTot.ToA();
                       PeakAmpl[nValidDigiToAs] = ToaTot.PeakAmplitude();
                       nValidDigiToAs++;
+		      RhoArea->Fill(SensorRho,SensorArea);
                   }
                 if (ToaTot.IsToTValid())
                   DigiToTs[nValidDigiToTs++] = ToaTot.ToT();
