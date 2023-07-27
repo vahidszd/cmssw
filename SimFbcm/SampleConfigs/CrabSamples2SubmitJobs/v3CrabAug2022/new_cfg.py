@@ -64,28 +64,28 @@ def get_files_in_directory(directory):
 
 
 print(options.pu)
-if options.pu == '0p5':
-    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU0p5'
+if options.pu == '0.5':
+    directory_path = '/eos/home-v/vsedighz/vahidtest/FBCM_with_TDR_GEN_SIM_DIGI/NuGun/FbcmMultiInstanceNuGunPU0p5'
 elif options.pu == '1':
-    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU1'
-elif options.pu == '1p5':
-    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU1p5'
+    directory_path = '/eos/home-v/vsedighz/vahidtest/FBCM_with_TDR_GEN_SIM_DIGI/NuGun//FbcmMultiInstanceNuGunPU1'
+elif options.pu == '1.5':
+    directory_path = '/eos/home-v/vsedighz/vahidtest/FBCM_with_TDR_GEN_SIM_DIGI/NuGun/FbcmMultiInstanceNuGunPU1p5'
 elif options.pu == 1.5:
-    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU1p5'
+    directory_path = '/eos/home-v/vsedighz/vahidtest/FBCM_with_TDR_GEN_SIM_DIGI/NuGun/FbcmMultiInstanceNuGunPU1p5'
 elif options.pu == '2':
-    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU2'
+    directory_path = '/eos/home-v/vsedighz/vahidtest/FBCM_with_TDR_GEN_SIM_DIGI/NuGun/FbcmMultiInstanceNuGunPU2'
 elif options.pu == '10':
-    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU10'
+    directory_path = '/eos/home-v/vsedighz/vahidtest/FBCM_with_TDR_GEN_SIM_DIGI/NuGun/FbcmMultiInstanceNuGunPU10'
 elif options.pu == '30':
-    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU30'
+    directory_path = '/eos/home-v/vsedighz/vahidtest/FBCM_with_TDR_GEN_SIM_DIGI/NuGun/FbcmMultiInstanceNuGunPU30'
 elif options.pu == '50':
-    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU50'
+    directory_path = '/eos/home-v/vsedighz/vahidtest/FBCM_with_TDR_GEN_SIM_DIGI/NuGun/FbcmMultiInstanceNuGunPU50'
 elif options.pu == '100':
-    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU100'
+    directory_path = '/eos/home-v/vsedighz/vahidtest/FBCM_with_TDR_GEN_SIM_DIGI/NuGun/FbcmMultiInstanceNuGunPU100'
 elif options.pu == '140':
-    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU140'
+    directory_path = '/eos/home-v/vsedighz/vahidtest/FBCM_with_TDR_GEN_SIM_DIGI/NuGun/FbcmMultiInstanceNuGunPU140'
 elif options.pu == '200':
-    directory_path = '/eos/home-v/vsedighz/vahidtest/NuGun/FbcmMultiInstanceNuGunPU200'
+    directory_path = '/eos/home-v/vsedighz/vahidtest/FBCM_with_TDR_GEN_SIM_DIGI/NuGun/FbcmMultiInstanceNuGunPU200'
 else:
     print("Invalid options.pu value!")
 
@@ -108,18 +108,17 @@ print(file_paths)
 
 
 
-print ("type of root_files_200 is : ",type(root_files_200))
-print ("type of file_paths is : " , type (file_paths))
+#print ("type of root_files_200 is : ",type(root_files_200))
+#print ("type of file_paths is : " , type (file_paths))
 
 process.source = cms.Source("PoolSource",
-                            fileNames = cms.untracked.vstring(file_paths
+                            fileNames =cms.untracked.vstring(file_paths
  #           'file:/eos/cms/store/group/dpg_bril/comm_bril/phase2-sim/FBCM/NuGun/FBCMNuGunPU100/210130_220345/0000/GEN_SIM_DIGI_99.root'#(TDR files)
 #'file:/eos/home-v/vsedighz/lasttest/NuGun/FbcmMultiInstanceNuGunPU50/230529_051020/0000/GEN_SIM_DIGI_1.root','file:/eos/home-v/vsedighz/lasttest/NuGun/FbcmMultiInstanceNuGunPU50/230529_051020/0000/GEN_SIM_DIGI_2.root','file:/eos/home-v/vsedighz/lasttest/NuGun/FbcmMultiInstanceNuGunPU50/230529_051020/0000/GEN_SIM_DIGI_3.root','file:/eos/home-v/vsedighz/lasttest/NuGun/FbcmMultiInstanceNuGunPU50/230529_051020/0000/GEN_SIM_DIGI_4.root','file:/eos/home-v/vsedighz/lasttest/NuGun/FbcmMultiInstanceNuGunPU50/230529_051020/0000/GEN_SIM_DIGI_5.root'
 #'file:/eos/cms/store/group/dpg_bril/comm_bril/phase2-sim/FBCM/Aug2022Workshop/GEN_SIM_DIGI_Validation/NuGun/FbcmMultiInstanceNuGunPU200/230611_161305/0000/GEN_SIM_DIGI_99.root'
-#'file:GEN_SIM_DIGI_1.5.root'
-                )
+                           )
                             )
-output_folder = '/eos/home-v/vsedighz/vahidtest/hists'
+output_folder = '/eos/home-v/vsedighz/vahidtest/FBCM_with_TDRFE_hists'
 process.TFileService = cms.Service("TFileService",
                                        fileName = cms.string(os.path.join(output_folder,'histodemonew_pu{0}.root'.format(options.pu)))
                                    )
