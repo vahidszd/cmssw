@@ -21,32 +21,32 @@ SiHitPulseShapeParam =cms.PSet(
 SiPadFrontEndBlock0 = cms.PSet(
 	FrontEndType = cms.int32(2), # 0:CFD_TDR, 1: BCM1F VME, 2: NewFBCM_ASIC(2022)
                            
-    GoodForSizeRange = cms.vdouble(0.0,0.0255), # cm2, range from minimum size through maximum size
+    GoodForSizeRange = cms.vdouble(0.0,0.0312), # cm2, range from minimum size through maximum size
 	BlockIndex = cms.int32(0),
-	MaxFEOutputVoltage = cms.double(640.0), # mV
+	MaxFEOutputVoltage = cms.double(700.0), # mV
 	#LimmiterEdgeCorrFactor = cms.double(1.5), # unitless, by default should be 1.5 
 	
-	ZCComp_LowerTsh = cms.double(-43.0), # mV, 
+	ZCComp_LowerTsh = cms.double(-42.0), # mV, 
 	ZCComp_UpperTsh = cms.double(0.0), # mV
-	ArmingComp_LowerTsh = cms.double(85.0), # mV , 3*5, 25
-	ArmingComp_UpperTsh = cms.double(85.0), # mV, 3*30, 60
+	ArmingComp_LowerTsh = cms.double(25.0), # mV , 3*5, 25
+	ArmingComp_UpperTsh = cms.double(60.0), # mV, 3*30, 60
 	
-	TIA_Shaper_Gain = cms.double(10), #120.0 V/V (the amplifier gain after TIA and Shaper1), to keep the linearity at least to 6MIPs
-	Tia_Rf = cms.double(47.0), # kOhm
-	Tia_Cf = cms.double(0.115), # pF
-	Tia_Cin_gs = cms.double(0.5), # pf (just the TIA input Capacitance), the SiPad Capacitance will be added to this
-	Tia_Co = cms.double(0.3), # pf
-	Tia_gin = cms.double(4.0), # mS
+	TIA_Shaper_Gain = cms.double(120), #120.0 V/V (the amplifier gain after TIA and Shaper1), to keep the linearity at least to 6MIPs
+	Tia_Rf = cms.double(5.0), # kOhm
+	Tia_Cf = cms.double(0.25), # pF
+	Tia_Cin_gs = cms.double(0.4), # pf (just the TIA input Capacitance), the SiPad Capacitance will be added to this
+	Tia_Co = cms.double(0.4), # pf
+	Tia_gin = cms.double(3.0), # mS
 	SensorCouplingCapacitance = cms.double(315.0), # pF
 	SensorCapPerCm2 = cms.double(86.207), # pF/cm2
-	Shaper1_Tau = cms.double(0.6), # ns
+	Shaper1_Tau = cms.double(0.9), # ns
 	CFD_Delay  = cms.double(2.0), # ns
 	CfdShaper_Gain = cms.double(1.5), # V/V
 	CfdShaper_Tau = cms.double(0.25), # ns
 	DelayModel = cms.string('FirstOrderPadeDelay'), # 'IdealDelay' or 'FirstOrderPadeDelay'
-	CFD_Fraction = cms.double(0.5), # between 0-1, typically around 0.5
+	CFD_Fraction = cms.double(0.53), # between 0-1, typically around 0.5
 	
-	lpGBT_AlignerDelay = cms.double(0.0), # ns # it was 5.2ns
+	lpGBT_AlignerDelay = cms.double(5.4), # ns # it was 5.2ns
 	Bx_Duration = cms.double(25.0), # ns
 	
     ToAUpperCut = cms.double(30.0), # ns // for BIB study, more than one BX should be investigated
@@ -78,7 +78,7 @@ SiPadFrontEndBlock0 = cms.PSet(
                                     3.13, 2.9, 2.69, 2.5, 2.33, 2.18, 2.03, 1.9),
         ),
     
-    signalCodeForPeakAmpl = cms.int32(1), # 0: silicon_signal, 1: preAmp_signal, 2: boster_out,
+    signalCodeForPeakAmpl = cms.int32(4), # 0: silicon_signal, 1: preAmp_signal, 2: boster_out,
                                      # 3:bosterOutAfter limmter, 4: shaper out
                                      # note: this works well for the NEW FBCMASIC,
                                      # but for the TDR or BCM1F, by defual it samples the end of analoug chain. 
